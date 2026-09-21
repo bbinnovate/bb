@@ -29,10 +29,6 @@ const Index = () => {
         <SeventhSection/>
         <Footer />
        </SmoothScroll>
-
-
-
-       
     </div>
   )
 }
