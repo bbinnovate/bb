@@ -20,6 +20,13 @@ const Index = () => {
     <div>
       {/* <ClientScripts/> */}
        {/* <MobilePopup/> */}
+
+
+
+
+
+
+       
        <SmoothScroll> 
         <Taxi/>
         <Navbar />
