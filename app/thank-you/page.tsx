@@ -21,6 +21,11 @@ const Index = () => {
         <Thankyou />
         <Footer />      
     </div>
+
+
+
+
+    
   )
 }
 
