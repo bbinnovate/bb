@@ -4,8 +4,8 @@ import teamOffice from "@/app/components/ADS/src/assets/team.jpg";
 import Image from "next/image";
 
 const stats = [
-  { icon: BarChart3, value: "₹8Cr+", label: "Revenue delivered" },
-  { icon: IndianRupee, value: "₹200Cr+", label: "Managed ad spend" },
+  { icon: BarChart3, value: "₹200Cr+", label: "Revenue delivered" },
+  { icon: IndianRupee, value: "₹50Cr+", label: "Managed ad spend" },
   { icon: Users, value: "250+", label: "Happy clients" },
   { icon: Zap, value: "4X", label: "Average ROAS" },
 ];
