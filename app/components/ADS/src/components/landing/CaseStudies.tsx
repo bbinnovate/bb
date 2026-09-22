@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/app/components/ADS/src/components/Reveal";
-import PM1 from "@/app/components/ADS/src/assets/pmads1.png";
+import PM1 from "@/app/components/ADS/src/assets/pmads5.png";
 import PM2 from "@/app/components/ADS/src/assets/pmads2.png";
 import PM3 from "@/app/components/ADS/src/assets/pmads3.png";
 import PM4 from "@/app/components/ADS/src/assets/pmads4.png";
@@ -15,9 +15,9 @@ const cases = [
     image: PM1,
     alt: "Sports e-commerce performance dashboard",
     metrics: [
-      { v: "₹20L - ₹45L+", l: "Scaled Monthly Revenue" },
+      { v: "₹20L - ₹1cr+", l: "Scaled Monthly Revenue" },
       { v: "6.8x - 10.2x", l: "ROAS" },
-      { v: "15.87%", l: "Returning Customer Rate" },
+      { v: "18.88%", l: "Returning Customer Rate" },
     ],
   },
   {

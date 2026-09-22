@@ -21,12 +21,6 @@ const Index = () => {
       {/* <ClientScripts/> */}
        {/* <MobilePopup/> */}
 
-
-
-
-
-
-       
        <SmoothScroll> 
         <Taxi/>
         <Navbar />

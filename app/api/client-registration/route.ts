@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
       contactPerson,
       email,
       phone,
+      address,
       website,
       termsVersion,
       agreementTimestamp,
@@ -24,6 +25,8 @@ export async function POST(request: NextRequest) {
       !industry ||
       !email ||
       !phone ||
+      !address ||
+      !address.trim() ||
       !services ||
       services.length === 0
     ) {
@@ -63,6 +66,7 @@ export async function POST(request: NextRequest) {
       contactPerson,
       email,
       phone,
+      address,
       website: website || "",
       termsVersion,
       agreementTimestamp,
@@ -232,6 +236,14 @@ export async function POST(request: NextRequest) {
       <span style="display:inline-block; width:4px; height:4px; background:#000; border-radius:50%; margin-right:10px;"></span>
       <strong>Phone:</strong>
       <span style=" color:#555555 ; text-transform: capitalize;" >${phone}</span>
+    </td>
+  </tr>
+
+  <tr>
+    <td style="padding:6px 0;">
+      <span style="display:inline-block; width:4px; height:4px; background:#000; border-radius:50%; margin-right:10px;"></span>
+      <strong>Address:</strong>
+      <span style=" color:#555555 ; text-transform: capitalize;" >${address}</span>
     </td>
   </tr>
 
@@ -413,6 +425,7 @@ export async function POST(request: NextRequest) {
       <p><strong>Contact Person:</strong> ${contactPerson || "N/A"}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Phone:</strong> ${phone}</p>
+      <p><strong>Address:</strong> ${address}</p>
       <p><strong>Website:</strong> ${website || "N/A"}</p>
       <p><strong>Terms Agreed:</strong> Yes (Version ${termsVersion})</p>
       <p><strong>Agreement Timestamp:</strong> ${agreementTimestampIST}</p>

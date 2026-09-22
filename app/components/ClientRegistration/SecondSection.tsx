@@ -171,6 +171,7 @@ const SecondSection = () => {
     contactPerson: "",
     email: "",
     phone: "",
+    address: "",
     website: "",
     termsAgreed: false,
   });
@@ -181,6 +182,7 @@ const SecondSection = () => {
     contactPerson: false,
     email: false,
     phone: false,
+    address: false,
     website: false,
   });
   const [errors, setErrors] = useState<any>({
@@ -190,6 +192,7 @@ const SecondSection = () => {
     contactPerson: "",
     email: "",
     phone: "",
+    address: "",
     website: "",
     services: "",
     termsAgreed: "",
@@ -206,7 +209,7 @@ const validateCurrentStep = (): boolean => {
 
   const fieldsByStep: any = {
     0: ["companyName", "industry"],
-    1: ["contactPerson", "email", "phone", "termsAgreed"],
+    1: ["contactPerson", "email", "phone", "address", "termsAgreed"],
   };
 
   // ✅ Validate ONLY fields of current step - DO NOT clear other steps
@@ -273,6 +276,7 @@ useEffect(() => {
         contactPerson: "",
         email: "",
         phone: "",
+        address: "",
         website: "",
         termsAgreed: false,
       });
@@ -286,6 +290,7 @@ useEffect(() => {
         contactPerson: "",
         email: "",
         phone: "",
+        address: "",
         website: "",
         services: "",
         termsAgreed: "",
@@ -334,6 +339,9 @@ useEffect(() => {
         return "";
       case "contactPerson":
         if (!value.trim()) return "Contact Person is required";
+        return "";
+      case "address":
+        if (!value.trim()) return "Address is required";
         return "";
       case "gstin":
       case "website":
@@ -420,6 +428,7 @@ const handleServiceToggle = (serviceName: string) => {
   contactPerson: validateField("contactPerson", formData.contactPerson),
   email: validateField("email", formData.email),
   phone: validateField("phone", formData.phone),
+  address: validateField("address", formData.address),
   termsAgreed: formData.termsAgreed ? "" : "You must agree to the Terms of Engagement",
   services:
     selectedServices.length === 0
@@ -462,6 +471,7 @@ const handleServiceToggle = (serviceName: string) => {
           contactPerson: formData.contactPerson,
           email: formData.email,
           phone: formData.phone,
+          address: formData.address,
           website: formData.website,
           termsVersion: "v1.0",
           agreementTimestamp: new Date().toISOString(),
@@ -481,6 +491,7 @@ const handleServiceToggle = (serviceName: string) => {
         contactPerson: "",
         email: "",
         phone: "",
+        address: "",
         website: "",
         termsAgreed: false,
       });
@@ -492,6 +503,7 @@ const handleServiceToggle = (serviceName: string) => {
         contactPerson: "",
         email: "",
         phone: "",
+        address: "",
         website: "",
         services: "",
         termsAgreed: "",
@@ -1018,6 +1030,49 @@ className={`w-full type-step ${
               </div>
               {errors.phone && (
                 <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+              )}
+            </div>
+            {/* Address */}
+            <div>
+              <div className="relative w-full">
+                <input
+                  type="text"
+                  name="address"
+                  placeholder="Address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  onFocus={() => handleFocus("address")}
+                  onBlur={() => handleBlur("address")}
+                  className={`
+          w-full px-7 py-1 bg-transparent
+          border-0 border-b-2 ${
+            errors.address
+              ? "border-b-red-500"
+              : "border-b-[var(--color-highlight)]"
+          }
+          white-text placeholder-gray-400 small-placeholder
+          focus:outline-none focus:border-b-[var(--color-highlight)]
+        `}
+                />
+                <div className="absolute top-1/2 -translate-y-1/2 pointer-events-none">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke={getIconColor(formData.address, focused.address)}
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </div>
+              </div>
+              {errors.address && (
+                <p className="text-red-500 text-xs mt-1">{errors.address}</p>
               )}
             </div>
 <div>
