@@ -80,12 +80,14 @@ const SecondSection = () => {
     >
       {pathname.startsWith("/work") ? (
         <h2 className="black-text mr-4 lg:mb-5 mb-4">
-          Case Studies
+          Services
+
         </h2>
       ) : pathname.startsWith("/service") ? (
         <div className="flex items-center justify-center w-full py-5">
           <h2 className="text-center black-text">
-            Our Work
+          Services
+
           </h2>
         </div>
       ) : null}
