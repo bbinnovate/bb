@@ -163,10 +163,10 @@ type Testimonial = {
 const AdsTestimonialsSection = () => {
   const { department } = useParams();
 
-  const testimonialList: Testimonial[] =
-    testimonials[
-      (department as keyof typeof testimonials) ?? "paid-marketing"
-    ] || testimonials["paid-marketing"];
+const testimonialList: Testimonial[] =
+  testimonials[
+    (department as keyof typeof testimonials) ?? "performance-marketing-services"
+  ] || testimonials["performance-marketing-services"];
 
   const [currentGroup, setCurrentGroup] = useState(0);
 
