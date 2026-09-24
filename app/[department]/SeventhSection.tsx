@@ -38,7 +38,7 @@ const SeventhSection = () => {
 
   const pageData =
     pageContent[pathname as keyof typeof pageContent] ??
-    pageContent["/website-development"];
+  pageContent["/website-development-services"];
 
   return (
     <section className="container py-10 sm:py-15 lg:py-20">

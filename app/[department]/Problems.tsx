@@ -171,7 +171,7 @@ export default function Problems() {
 
 const content =
   pageContent[pathname as keyof typeof pageContent] ??
-  pageContent["/website-development"];
+  pageContent["/website-development-services"];
   return (
     <section className="container py-10 sm:py-15 lg:py-20 relative overflow-hidden">
       <div className=" relative z-10">
