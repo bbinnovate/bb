@@ -5,21 +5,21 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const pageContent = {
-  "/website-development": {
+  "/website-development-services": {
     heading: ["Connect.", "Collaborate.", "Grow."],
     subline:
       "Ready to turn your website into your best salesperson — no matter what you sell? Let's talk.",
     cta: "Get Free Audit",
   },
 
-  "/paid-marketing": {
+  "/performance-marketing-services": {
     heading: ["Connect.", "Collaborate.", "Grow."],
     subline:
       "Ready to turn your ad spend into predictable revenue? Let's talk.",
     cta: "Get Free Audit",
   },
 
-  "/social-media-marketing": {
+  "/social-media-management": {
     heading: ["Connect.", "Collaborate.", "Grow."],
     subline:
       "Ready to turn your social media into your brand's biggest growth channel? Let's talk.",

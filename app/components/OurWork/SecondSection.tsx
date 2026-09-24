@@ -109,6 +109,10 @@ const centerHeading = pathname.startsWith("/work")
     }
   };
 
+
+
+
+  
   return (
     <section id="second-section" className="container py-10 sm:py-15 lg:py-20">
 {pathname.startsWith("/work") ? (

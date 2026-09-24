@@ -44,7 +44,7 @@ const seoProcess = [
 ];
 
 const pageContent: Record<string, any> = {
-  "/website-development": {
+  "/website-development-services": {
     title: (
       <>
          Design That {" "}
@@ -57,7 +57,7 @@ const pageContent: Record<string, any> = {
     subtitle: "Modern, responsive websites with intuitive UI/UX that engage users and drive business growth.",
     process: webProcess
   },
-  "/social-media-marketing": {
+  "/social-media-management": {
     title: (
       <>
        Making Brands {" "}
@@ -69,7 +69,7 @@ const pageContent: Record<string, any> = {
     subtitle: "We help brands grow through strategic social media marketing, engaging content, and data driven campaigns that build awareness, strengthen communities, and drive measurable business growth.",
     process: smmProcess
   },
-  "/paid-marketing": {
+  "/performance-marketing-services": {
     title: (
       <>
         Mumbai's Growth Focused {" "}

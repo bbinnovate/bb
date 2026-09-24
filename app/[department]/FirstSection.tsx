@@ -3,42 +3,41 @@
 import { usePathname } from "next/navigation";
 
 const pageContent = {
-  "/website-development": {
+  "/website-development-services": {
     title: (
       <>
-        Get a Website{" "}
-        <span className="text-highlight">
-          That Sells
-        </span>{" "}
-        Not Just One That Looks Good
-      </>
+  Website Development{" "}
+  <span className="text-highlight">
+    Investment Estimator
+  </span>
+</>
     ),
     subtitle:
       "Whether you're scaling a D2C brand, growing a service business, or expanding a retail store, know exactly what your website needs to succeed. Get a free website audit.",
   },
 
-  "/paid-marketing": {
+  "/performance-marketing-services": {
     title: (
       <>
-        Stop Wasting{" "}
-        <span className="text-highlight">
-          Ad Spend
-        </span>{" "}
-        on Campaigns That Don't Convert
+       Performance Marketing{" "}
+       <span className="text-highlight">
+    Investment Estimator
+  </span>
+     
       </>
     ),
     subtitle:
       "Whether you want more leads, online sales, or stronger brand awareness, see exactly what a results-driven campaign will cost and how it'll perform. Get your free audit below.",
   },
 
-  "/social-media-marketing": {
+  "/social-media-management": {
     title: (
       <>
-        Make Your Brand{" "}
+        Social Media{" "}
         <span className="text-highlight">
-          Impossible to Ignore
+         Investment Estimator
         </span>{" "}
-        Online
+      
       </>
     ),
     subtitle:
@@ -48,13 +47,9 @@ const pageContent = {
 "/seo": {
   title: (
     <>
-      Improve Rankings With{" "}
+      SEO{" "}
       <span className="text-highlight">
-        SEO
-      </span>{" "}
-      That Drives{" "}
-      <span className="text-highlight">
-        Organic Growth
+       Investment Estimator
       </span>
     </>
   ),
@@ -73,7 +68,7 @@ export default function Firstsection({ department }: FirstsectionProps) {
 
   const content =
     pageContent[pathKey as keyof typeof pageContent] ||
-    pageContent["/website-development"];
+    pageContent["/website-development-services"];
 
   return (
     <section className="container pb-0 lg:py-0 lg:mt-30 mt-0 px-4 sm:px-6 lg:px-8">
@@ -86,9 +81,9 @@ export default function Firstsection({ department }: FirstsectionProps) {
   {content.title}
 </a>
 
-          <p className="mt-4 max-w-4xl  text-black subtitle">
+          {/* <p className="mt-4 max-w-4xl  text-black subtitle">
             {content.subtitle}
-          </p>
+          </p> */}
         </div>
       </div>
     </section>

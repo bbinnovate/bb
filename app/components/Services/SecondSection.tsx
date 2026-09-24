@@ -1,214 +1,155 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
-import { useScroll, motion } from "framer-motion";
+
+import React from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import gsap from "gsap";
-interface Card {
-  number?: string;
+import Image from "next/image";
+
+type Step = {
+  number: string;
   title: string;
-  subtitle: string;
   image: string;
   link: string;
-  shape: "square" | "rectangle" | "circle";
-}
-const cards: Card[] = [
+};
+
+const allSteps: Step[] = [
+
   {
     number: "01",
-    title: "Design & Branding",
-    subtitle:
-      "We translate your core purpose into an authentic experience that builds lifelong advocacy and market leadership.",
-    image: "/images/branding-cs/barnd3.jpg",
-    link: "/services/design-branding",
-    shape: "rectangle",
+    title: "Web Development & UI UX",
+   image: "/images/webdev/SuperSoxnew.jpg",
+    link: "/services/website-development",
   },
   {
     number: "02",
-    title: "Web Development & UI UX",
-    subtitle:
-      "We build pixel-perfect websites and digital experiences that aren't just beautiful, but are engineered to convert.",
-    image: "/images/webdev/SuperSoxnew.jpg",
-    link: "/services/website-development",
-    shape: "square",
+    title: "Design & Branding",
+   image: "/images/branding-cs/barnd3.jpg",
+    link: "/services/design-branding",
   },
+ 
   {
     number: "03",
-    title: "SEO ",
-    subtitle:
-      "We put your brand at the top of Google, connecting you with customers who are already searching for you.",
-    image: "/images/seo-cs/manbaaa.png",
+    title: "SEO",
+   image: "/images/seo-cs/manbaaa.png",
     link: "/services/seo-services",
-    shape: "circle",
   },
   {
     number: "04",
-    title: "GEO", 
-    subtitle:
-      "We position your content for citation, connecting your brand directly with users who need a definitive, AI-validated answer.",
-    image: "/images/geo-cs/geo-1.jpg",
+    title: "GEO",
+   image: "/images/geo-cs/geo-1.jpg",
     link: "/services/geo-services",
-    shape: "rectangle",
   },
   {
     number: "05",
-    title: "Social Media Management",
-    subtitle:
-      "We build and nurture your online community, turning followers into loyal fans through creative content and authentic engagement.",
-    image: "/images/sm/Manba.jpg",
-    link: "/services/social-media-marketing",
-    shape: "square",
+    title: "Performance Marketing",
+    image: "/images/pm/Chatterboxnew2.jpg",
+    link: "/services/performance-marketing",
   },
   {
     number: "06",
-    title: "Performance Marketing",
-    subtitle:
-      "We create data-driven ad campaigns that deliver measurable results, turning clicks into customers and spend into revenue.",
-    image: "/images/pm/Chatterboxnew2.jpg",
-    link: "/services/performance-marketing",
-    shape: "circle",
-  }, 
+    title: "Social Media Management",
+    image: "/images/sm/Manba.jpg",
+    link: "/services/social-media-marketing",
+  },
+  
 ];
-export default function SecondSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-  const isMobile =
-  typeof window !== "undefined" && window.innerWidth <= 768;
-  const [progress, setProgress] = useState(0);
-  useEffect(() => {
-    return scrollYProgress.on("change", (v) => setProgress(v));
-  }, [scrollYProgress]);
-  const segment = 1 / cards.length;
+
+const SecondSection = () => {
+  const pathname = usePathname();
+
+  const leftHeading = pathname.startsWith("/work")
+    ? "Case Studies"
+    : "Our Work";
+
+  const centerHeading = pathname.startsWith("/work")
+    ? "Case Studies"
+    : "Our Work";
+
+  const visibleSteps = allSteps;
+
+  const pairs: Step[][] = [];
+
+  for (let i = 0; i < visibleSteps.length; i += 2) {
+    pairs.push(visibleSteps.slice(i, i + 2));
+  }
+
   return (
     <section
       id="second-section"
-      className="container py-10 sm:py-15 lg:py-20 relative w-full"
+      className="container py-10 sm:py-15 lg:py-20"
     >
-      {/* Sticky Title */}
-      <div className="sticky top-0 h-screen flex flex-col items-center justify-center pointer-events-none z-0 px-2">
-        <div
-          style={{
-            color: progress < 0.05 ? "#1D1D1D" : "#F1F1F1",
-            transition: "color 0.3s linear",
-          }}
-          className="text-center single-title select-none"
-        >
-          Services
+      {pathname.startsWith("/work") ? (
+        <h2 className="black-text mr-4 lg:mb-5 mb-4">
+          Case Studies
+        </h2>
+      ) : pathname.startsWith("/service") ? (
+        <div className="flex items-center justify-center w-full py-5">
+          <h2 className="text-center black-text">
+            Our Work
+          </h2>
         </div>
-      </div>
-      {/* Scrollable Cards */}
-      <div ref={containerRef} className="relative h-[800vh] z-10">
-        <div className="sticky top-0 h-screen overflow-hidden">
-          {cards.map((card, i) => {
-            const start = i * segment;
-            const end = start + segment;
-            const visible = progress >= start && progress <= end;
-            const localProgress = Math.min(
-              Math.max((progress - start) / segment, 0),
-              1
-            );
-            const y = 100 - localProgress * 200;
-            const rotate =
-              i % 2 === 0 ? (1 - localProgress) * 5 : (localProgress - 1) * 5;
-            return (
-              <Link key={i} href={card.link} scroll={true}>
-                <motion.div
-                  ref={(el) => {
-                    cardRefs.current[i] = el;
-                  }}
-                  className={`absolute top-1/2 md:px-4 px-2 z-10
-      ${i % 2 === 0 ? "md:left-0" : "md:right-0"} 
-      max-md:left-1/2 max-md:-translate-x-1/2`}
-                  style={{
-                    cursor: "pointer",
-                    willChange: visible ? "transform, opacity" : "auto",
-                    WebkitBackfaceVisibility: "hidden",
-                    backfaceVisibility: "hidden",
-                    WebkitPerspective: 1000,
-                    perspective: 1000,
-                    translateY: "-50%",
-                  }}
-                  animate={{
-                    y: `${y}%`,
-                    rotate: rotate,
-                    opacity: visible ? 1 : 0,
-                  }}
-                  transition={{
-                    type: "tween",
-                    ease: "linear",
-                    duration: 0.3,
-                    opacity: { duration: 0.3 },
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const cardElement = cardRefs.current[i];
-                    if (!cardElement) return;
-                    // Animate card before navigating
-                    gsap.to(cardElement, {
-                      y: "100vh",
-                      opacity: 0,
-                      duration: 0.6,
-                      ease: "power3.inOut",
-                      onComplete: () => {
-                        window.location.href = card.link;
-                      },
-                    });
-                  }}
+      ) : null}
+
+      {/* Projects Grid */}
+      <div className="space-y-6">
+        {pairs.map((pair, rowIdx) => (
+          <div
+            key={rowIdx}
+            className="grid grid-cols-1 md:grid-cols-5 gap-6"
+          >
+            {pair.map((step, i) => {
+              const isEvenRow = rowIdx % 2 === 0;
+              const isFirstBig = isEvenRow ? i === 0 : i !== 0;
+              const colSpan = isFirstBig ? 3 : 2;
+
+              return (
+                <Link
+                  key={i}
+                  href={step.link}
+                  className={`col-span-1 md:col-span-${colSpan} relative h-[220px] sm:h-[300px] md:h-[340px] rounded-[15px] overflow-hidden group`}
                 >
-                  <div
-                    className="flex flex-col justify-end p-4 sm:p-6 border-[5px] border-[var(--color-primary)]"
-                    style={{
-    width: isMobile
-      ? card.shape === "circle"
-        ? "330px"
-        : card.shape === "square"
-        ? "330px"
-        : "330px"
-      : card.shape === "circle"
-      ? "clamp(220px, 65vw, 480px)"
-      : card.shape === "square"
-      ? "clamp(220px, 75vw, 550px)"
-      : "clamp(260px, 80vw, 650px)",
+                  {/* Background image */}
+                  <Image
+                    width={1000}
+                    height={1000}
+                    src={step.image}
+                    alt={step.title}
+                    className="absolute inset-0 w-full h-full object-cover bg-black z-0"
+                  />
 
-    height: isMobile
-      ? card.shape === "circle"
-        ? "350px"
-        : card.shape === "square"
-        ? "350px"
-        : "350px"
-      : card.shape === "circle"
-      ? "clamp(220px, 65vw, 480px)"
-      : card.shape === "square"
-      ? "clamp(220px, 75vw, 480px)"
-      : "clamp(260px, 60vh, 480px)",
+                  {/* 🔥 Black fade overlay (below text) */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-[1]" />
 
-    borderRadius: card.shape === "circle" ? "20%" : "20px",
-    backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 100%), url(${card.image})`,
-    backgroundSize: "cover",
-    backgroundPosition: "top",
-    backgroundRepeat: "no-repeat",
-    WebkitTransform: "translate3d(0,0,0)",
-    transform: "translate3d(0,0,0)",
-  }}
-                  >
-                    <div className="text-highlight numbering">
-                      {card.number}
-                    </div>
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-highlight gap-5">
-                      {card.title}
-                    </h3>
-                    <p className="mt-2 text-sm sm:text-base md:text-lg white-text">
-                      {card.subtitle}
-                    </p>
+                  {/* Text above overlay */}
+                  <div className="absolute inset-0 z-[2] flex items-end p-4">
+                    <CardText
+                      number={step.number}
+                      title={step.title}
+                    />
                   </div>
-                </motion.div>
-              </Link>
-            );
-          })}
-        </div>
+                </Link>
+              );
+            })}
+          </div>
+        ))}
       </div>
     </section>
   );
-}
+};
+
+const CardText: React.FC<{
+  number: string;
+  title: string;
+}> = ({ number, title }) => (
+  <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 flex items-end gap-2 sm:gap-4">
+    <span className="text-highlight casenumbering">
+      {number}
+    </span>
+
+    <h3 className="white-text leading-tight">
+      {title}
+    </h3>
+  </div>
+);
+
+export default SecondSection;

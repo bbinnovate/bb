@@ -13,7 +13,7 @@ const iconMap = {
 };
 
 const pageContent = {
-  "/website-development": {
+  "/website-development-services": {
     eyebrow: "WHY BOMBAY BLOKES",
 
     title: (
@@ -56,7 +56,7 @@ const pageContent = {
     ],
   },
 
-  "/paid-marketing": {
+  "/performance-marketing-services": {
     eyebrow: "WHY BOMBAY BLOKES",
 
     title: (
@@ -99,7 +99,7 @@ const pageContent = {
     ],
   },
 
-  "/social-media-marketing": {
+  "/social-media-management": {
     eyebrow: "WHY BOMBAY BLOKES",
 
     title: (
@@ -191,7 +191,7 @@ export default function AboutUs() {
 
 const content =
   pageContent[pathname as keyof typeof pageContent] ??
-  pageContent["/website-development"];
+  pageContent["/website-development-services"];
   return (
     <section className=" py-10 sm:py-15 lg:py-20 bg-black text-secondary relative overflow-hidden">
       {/* Background accents */}

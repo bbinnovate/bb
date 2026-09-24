@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import { Outfit, Poppins } from 'next/font/google';
 
 const pageContent = {
-  "/website-development": {
+  "/website-development-services": {
     heading: (
       <>
         Why Most{" "}
@@ -37,7 +37,7 @@ const pageContent = {
     ],
   },
 
-  "/paid-marketing": {
+  "/performance-marketing-services": {
     heading: (
       <>
         What Happens When Ads Are{" "}
@@ -71,7 +71,7 @@ const pageContent = {
     ],
   },
 
-  "/social-media-marketing": {
+  "/social-media-management": {
     heading: (
       <>
         Why Brands{" "}

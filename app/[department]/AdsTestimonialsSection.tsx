@@ -8,7 +8,7 @@ import { useParams } from "next/navigation";
 
 
 const testimonials = {
-  "paid-marketing": [
+  "performance-marketing-services": [
     {
       brand: "Lemonade India",
       text: "Bombay Blokes helped us identify a clear brand direction and strengthen our digital presence. Their strategic approach and commitment to growth have made them an invaluable partner.",
@@ -80,7 +80,7 @@ const testimonials = {
     },
   ],
 
-  "social-media-marketing": [
+  "social-media-management": [
     {
       brand: "Lemonade India",
       text: "Bombay Blokes completely transformed our social media presence. Their creative direction, content strategy, and consistent execution helped us build a stronger brand and engage our audience like never before.",
@@ -120,7 +120,7 @@ const testimonials = {
   ],
 
   
-  "website-development": [
+  "website-development-services": [
   {
     brand: "Client Review",
     text: "Young, energetic team with a sharp eye for modern design. Creative, fresh ideas delivered with a smooth, collaborative process.",

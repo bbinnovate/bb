@@ -11,12 +11,12 @@ import ContactButton from "../components/ContactButton";
 import { usePathname } from "next/navigation";
 
 const pageContent = {
-  "/website-development": {
+  "/website-development-services": {
     subtitle:
       "No templates, no shortcuts. Just clean code, thoughtful design, and websites built to perform.",
   },
 
-  "/paid-marketing": {
+  "/performance-marketing-services": {
     subtitle:
       "No vanity metrics. Just campaigns engineered to grow revenue.",
   },
@@ -38,9 +38,11 @@ const AdsStatsSection = ({ content }: { content: StatsContent }) => {
 
 const pathname = usePathname();
 
+
+
 const pageData =
   pageContent[pathname as keyof typeof pageContent] ??
-  pageContent["/website-development"];
+  pageContent["/website-development-services"];
 
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.25 });
   return (
