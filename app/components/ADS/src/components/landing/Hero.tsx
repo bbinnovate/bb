@@ -10,11 +10,15 @@ import { getUtmParams } from "@/lib/utm";
 
 export function Hero() {
   const [sending, setSending] = useState(false);
+  const [hasDoneAds, setHasDoneAds] = useState<string>("");
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
+
+    const hasDoneAdsVal = (hasDoneAds || String(formData.get("hasDoneAds") || "")).trim();
+    const last3MonthsSpendVal = String(formData.get("last3MonthsSpend") || "").trim();
 
     setSending(true);
     try {
@@ -26,6 +30,12 @@ export function Hero() {
           phone: formData.get("phone"),
           email: formData.get("email"),
           brand: formData.get("brand"),
+          hasDoneAds: hasDoneAdsVal,
+          last3MonthsSpend: last3MonthsSpendVal,
+          doneAdsBefore: hasDoneAdsVal,
+          last_3_months_spend: last3MonthsSpendVal,
+          "Have you done ADS before?": hasDoneAdsVal,
+          "Last 3 Months Spend": last3MonthsSpendVal,
           budget: formData.get("budget"),
           challenge: formData.get("challenge"),
           goals: formData.get("goals"),
@@ -260,6 +270,42 @@ export function Hero() {
                 />
               </Field>
 
+              <div className={`grid gap-4 ${hasDoneAds === "Yes" ? "sm:grid-cols-2" : "sm:grid-cols-1"}`}>
+                <Field label="Have you done ADS before?">
+                  <div className="relative">
+                    <select
+                      required
+                      name="hasDoneAds"
+                      value={hasDoneAds}
+                      onChange={(e) => setHasDoneAds(e.target.value)}
+                      className={`${inputCls} appearance-none pr-11`}
+                    >
+                      <option value="" disabled>
+                        Select option
+                      </option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+
+                    <ChevronDown
+                      className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-black"
+                      strokeWidth={2}
+                    />
+                  </div>
+                </Field>
+
+                {hasDoneAds === "Yes" && (
+                  <Field label="What's your last 3 months spend?">
+                    <input
+                      required
+                      name="last3MonthsSpend"
+                      placeholder="e.g. ₹50,000 / ₹2 Lakhs"
+                      className={`${inputCls} `}
+                    />
+                  </Field>
+                )}
+              </div>
+
               <div className="grid gap-4 sm:grid-cols-2">
   <Field label="Monthly ad budget">
     <div className="relative">
@@ -272,7 +318,7 @@ export function Hero() {
         <option value="" disabled>
           Select budget
         </option>
-        <option>Under ₹1 lakh</option>
+        <option>Above ₹1 lakh</option>
         <option>₹1 lakh – ₹3 lakh</option>
         <option>₹3 lakh – ₹5 lakh</option>
         <option>₹5 lakh – ₹15 lakh</option>

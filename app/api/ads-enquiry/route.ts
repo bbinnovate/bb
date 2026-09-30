@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { sendEmail } from "@/lib/email-sender";
+import { adminDB } from "@/lib/firebase-admin";
+import { FieldValue } from "firebase-admin/firestore";
 
 type EnquiryPayload = {
   name?: string;
@@ -8,6 +10,10 @@ type EnquiryPayload = {
   brand?: string;
   website?: string;
   instagram?: string;
+  hasDoneAds?: string;
+  last3MonthsSpend?: string;
+  doneAdsBefore?: string;
+  last_3_months_spend?: string;
   budget?: string;
   challenge?: string;
   goals?: string;
@@ -37,13 +43,19 @@ function buildEmailBody(payload: EnquiryPayload) {
     `Brand: ${payload.brand || "-"}`,
     `Website: ${payload.website || "-"}`,
     `Instagram: ${payload.instagram || "-"}`,
+    `Done ADS before: ${payload.hasDoneAds || "-"}`,
+  ];
+  if (payload.hasDoneAds?.toLowerCase() === "yes" || payload.last3MonthsSpend) {
+    lines.push(`Last 3 months spend: ${payload.last3MonthsSpend || "-"}`);
+  }
+  lines.push(
     `Monthly ad budget: ${payload.budget || "-"}`,
     `Biggest marketing challenge: ${payload.challenge || "-"}`,
     `Growth goals: ${payload.goals || "-"}`,
     `Date: ${payload.date || "-"}`,
     `Time: ${payload.time || "-"}`,
-    `Source: ${payload.source || "landing-page"}`,
-  ];
+    `Source: ${payload.source || "landing-page"}`
+  );
   if (payload.utm_source) lines.push(`UTM Source: ${payload.utm_source}`);
   if (payload.utm_medium) lines.push(`UTM Medium: ${payload.utm_medium}`);
   if (payload.utm_campaign) lines.push(`UTM Campaign: ${payload.utm_campaign}`);
@@ -122,6 +134,8 @@ function buildUserEmail(payload: EnquiryPayload) {
                   <tr><td style="padding:5px 0;"><strong>Email</strong></td><td style="padding:5px 0;">${escapeHtml(payload.email || "-")}</td></tr>
                   <tr><td style="padding:5px 0;"><strong>Phone</strong></td><td style="padding:5px 0;">${escapeHtml(payload.phone || "-")}</td></tr>
                   <tr><td style="padding:5px 0; vertical-align:top;"><strong>Brand / link</strong></td><td style="padding:5px 0; word-break:break-word;">${brand}</td></tr>
+                  ${payload.hasDoneAds ? `<tr><td style="padding:5px 0;"><strong>Done ADS before</strong></td><td style="padding:5px 0;">${escapeHtml(payload.hasDoneAds)}</td></tr>` : ""}
+                  ${payload.last3MonthsSpend ? `<tr><td style="padding:5px 0;"><strong>Last 3 months spend</strong></td><td style="padding:5px 0;">${escapeHtml(payload.last3MonthsSpend)}</td></tr>` : ""}
                   <tr><td style="padding:5px 0;"><strong>Monthly ad budget</strong></td><td style="padding:5px 0;">${escapeHtml(payload.budget || "-")}</td></tr>
                   <tr><td style="padding:5px 0; vertical-align:top;"><strong>Marketing challenge</strong></td><td style="padding:5px 0; word-break:break-word;">${escapeHtml(payload.challenge || "-")}</td></tr>
                   <tr><td style="padding:5px 0; vertical-align:top;"><strong>Growth goals</strong></td><td style="padding:5px 0; word-break:break-word;">${escapeHtml(capitalizeFirstLetter(payload.goals || "-"))}</td></tr>
@@ -184,6 +198,8 @@ function buildAdminEmail(payload: EnquiryPayload) {
     ${isSocialMediaEnquiry
       ? `<p><strong>Instagram / website:</strong> ${profile}</p>`
       : `<p><strong>Brand / website / Instagram:</strong> ${escapeHtml(payload.brand || payload.website || payload.instagram || "-")}</p>`}
+    ${payload.hasDoneAds ? `<p><strong>Done ADS before:</strong> ${escapeHtml(payload.hasDoneAds)}</p>` : ""}
+    ${payload.last3MonthsSpend ? `<p><strong>Last 3 months spend:</strong> ${escapeHtml(payload.last3MonthsSpend)}</p>` : ""}
     <p><strong>Monthly ad budget:</strong> ${escapeHtml(payload.budget || "-")}</p>
     <p><strong>Biggest marketing challenge:</strong> ${escapeHtml(payload.challenge || "-")}</p>
     <p><strong>Growth goals:</strong> ${capitalizeFirstLetter(payload.goals || "-")}</p>
@@ -195,7 +211,7 @@ function buildAdminEmail(payload: EnquiryPayload) {
 
 export async function POST(req: Request) {
   try {
-    const body: EnquiryPayload = await req.json();
+    const body: EnquiryPayload & Record<string, any> = await req.json();
 
     if (!body.name?.trim() || !body.email?.trim() || !body.phone?.trim()) {
       return NextResponse.json(
@@ -227,13 +243,31 @@ export async function POST(req: Request) {
     const utm_content = body.utm_content?.trim() || body.utmContent?.trim() || "";
     const utm_term = body.utm_term?.trim() || body.utmTerm?.trim() || "";
 
-    const payload: EnquiryPayload = {
+    const hasDoneAds =
+      body.hasDoneAds?.trim() ||
+      body.doneAdsBefore?.trim() ||
+      body["Done ADS before"]?.trim() ||
+      "";
+    const rawLastSpend =
+      body.last3MonthsSpend?.trim() ||
+      body.last_3_months_spend?.trim() ||
+      body["Last 3 Months Spend"]?.trim() ||
+      "";
+    const last3MonthsSpend = hasDoneAds.toLowerCase() === "no" ? "" : rawLastSpend;
+
+    const payload: EnquiryPayload & Record<string, any> = {
       name: body.name.trim(),
       phone: body.phone.trim(),
       email: body.email.trim(),
       brand: body.brand?.trim() || "",
       website: body.website?.trim() || "",
       instagram: body.instagram?.trim() || "",
+      hasDoneAds,
+      last3MonthsSpend,
+      doneAdsBefore: hasDoneAds,
+      last_3_months_spend: last3MonthsSpend,
+      "Done ADS before": hasDoneAds,
+      "Last 3 Months Spend": last3MonthsSpend,
       budget: body.budget?.trim() || "",
       challenge: body.challenge?.trim() || "",
       goals: body.goals?.trim() || "",
@@ -254,6 +288,18 @@ export async function POST(req: Request) {
     };
 
     console.log("[ADS ENQUIRY PAYLOAD SENT TO WEBHOOK]:", JSON.stringify(payload, null, 2));
+
+    // ============================
+    // 🔥 SAVE TO FIRESTORE DATABASE
+    // ============================
+    try {
+      await adminDB.collection("adsEnquiries").add({
+        ...payload,
+        createdAt: FieldValue.serverTimestamp(),
+      });
+    } catch (dbError) {
+      console.error("Firestore save error (adsEnquiries):", dbError);
+    }
 
     // Save enquiry to Google Sheet
     const googleSheetWebhook = process.env.GOOGLE_SHEET_WEBHOOK_URL;
@@ -292,7 +338,11 @@ export async function POST(req: Request) {
 
     await sendEmail({
       // to: "aryan@bombayblokes.com",
-      to: ["hello@bombayblokes.com", "bdm@bombayblokes.com", "siddique@bombayblokes.com" ,"aryankuril09@gmail.com"],
+      to: [
+        "hello@bombayblokes.com",
+         "bdm@bombayblokes.com", 
+         "siddique@bombayblokes.com" ,
+         "aryankuril09@gmail.com"],
       subject: `New Lead From - ${formatTitleCase(payload.name || "-")} for ${formatTitleCase(payload.service || "-")}`,
       html: buildAdminEmail(payload),
       fromName: "BB Forms",
