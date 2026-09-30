@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Banknote } from "lucide-react";
 import { cn } from "@/app/components/ADS/src/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,12 +16,45 @@ const links = [
 export function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [revenue, setRevenue] = useState(1000); // Start count from 1000
+  const [isFlashing, setIsFlashing] = useState(false);
+  const [addedBadge, setAddedBadge] = useState<string | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
+    };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Listen ONLY to live Shopify order received events to bump navbar money!
+  useEffect(() => {
+    const handleShopifyOrder = (e: Event) => {
+      const customEvent = e as CustomEvent<{ amount: number; amountText: string }>;
+      const amount = customEvent.detail?.amount || 25000;
+      const amountText = customEvent.detail?.amountText || `₹${amount.toLocaleString("en-IN")}`;
+
+      // 1. Bump revenue strictly when notification arrives
+      setRevenue((prev) => prev + amount);
+
+      // 2. Trigger glow & floating badge animation
+      setIsFlashing(true);
+      setAddedBadge(amountText);
+
+      setTimeout(() => {
+        setIsFlashing(false);
+      }, 1200);
+
+      setTimeout(() => {
+        setAddedBadge(null);
+      }, 3500);
+    };
+
+    window.addEventListener("shopify-order-received", handleShopifyOrder);
+    return () => window.removeEventListener("shopify-order-received", handleShopifyOrder);
   }, []);
 
   return (
@@ -31,7 +64,7 @@ export function SiteNav() {
         scrolled ? "bg-background/85 border-b backdrop-blur-xl" : "border-b border-transparent",
       )}
     >
-      <nav className="container flex h-16 items-center justify-between gap-4 md:h-20">
+      <nav className="container flex h-16 items-center justify-between gap-3 md:h-20">
          <Link href="/social-media-marketing">
                 <Image
                   src="/images/bblogo.webp"
@@ -54,7 +87,31 @@ export function SiteNav() {
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Brand Color Navbar Money Badge with Money Icon */}
+          <div
+            className={`relative flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-full bg-secondary text-secondary-foreground font-bold text-xs sm:text-sm shadow-md border border-black/10 transition-all duration-300 ${
+              isFlashing
+                ? "scale-110 ring-4 ring-black/20 shadow-xl"
+                : ""
+            }`}
+          >
+            <Banknote className="w-4 h-4 text-black shrink-0" strokeWidth={2.5} />
+            <span className="text-black/80 font-bold hidden xs:inline text-[11px] uppercase tracking-wider">
+              Revenue:
+            </span>
+            <span className="font-extrabold text-black tracking-tight font-mono text-xs sm:text-sm">
+              ₹{revenue.toLocaleString("en-IN")}
+            </span>
+
+            {/* Floating Order Revenue Animation Pill */}
+            {addedBadge && (
+              <span className="absolute -bottom-8 right-0 text-[11px] font-black text-white bg-black border border-white/20 px-2.5 py-0.5 rounded-full shadow-2xl animate-bounce">
+                +{addedBadge}
+              </span>
+            )}
+          </div>
+
           <a
             href="#audit"
             className="bg-ink text-background hidden rounded-full px-5 py-2.5 text-sm font-semibold transition-all hover:shadow-lift sm:inline-flex hover:-translate-y-0.5"
@@ -65,7 +122,8 @@ export function SiteNav() {
             type="button"
             aria-label="Toggle menu"
             onClick={() => setOpen((v) => !v)}
-className="grid size-10 shrink-0 place-items-center rounded-full border border-black lg:hidden"          >
+            className="grid size-10 shrink-0 place-items-center rounded-full border border-black lg:hidden"
+          >
             {open ? <X className="size-4" /> : <Menu className="size-4" />}
           </button>
         </div>

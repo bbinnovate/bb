@@ -12,6 +12,7 @@ import { FAQ } from "@/app/components/ADS/src/components/landing/FAQ";
 import { FinalCTA , Footer} from "@/app/components/ADS/src/components/landing/FinalCTA";
 import Mobilecta from "@/app/components/ADS/src/components/landing/Mobilecta";
 import SectionPopup from "@/app/components/ADS/src/components/landing/SectionPopup";
+import ShopifyNotification from "@/app/components/ADS/src/components/landing/ShopifyNotification";
 
 import "./lovable-compiled.css";
 
@@ -33,6 +34,7 @@ export default function PaidMarketingPage() {
       <Footer />
       <Mobilecta/>
       <SectionPopup />
+      <ShopifyNotification />
     </main>
   );
 }
