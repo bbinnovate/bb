@@ -70,11 +70,37 @@ const orders: OrderNotification[] = [
   },
 ];
 
+function ShopifyLogoSVG() {
+  return (
+    <svg viewBox="0 0 100 100" className="w-full h-full">
+      <path
+        fill="#95bf47"
+        d="M84.5 24.8c-.1-.7-.7-1.2-1.4-1.2h-11.8v-3.7C71.3 8.9 62.4 0 51.4 0S31.5 8.9 31.5 19.9v3.7H19.7c-.7 0-1.3.5-1.4 1.2L11 88.2c-.1.7.3 1.4.9 1.7.3.1.6.2.9.2h76.8c.3 0 .6-.1.9-.2.6-.3 1-.1.9-1.7L84.5 24.8zM41.5 19.9c0-5.5 4.4-9.9 9.9-9.9s9.9 4.4 9.9 9.9v3.7H41.5v-3.7z"
+      />
+      <path
+        fill="#ffffff"
+        d="M51.8 45.2c-5.4 0-8.2 2.7-8.2 6.5 0 8.1 14.8 5.7 14.8 14.4 0 4.5-3.8 7.3-9 7.3-6.2 0-10.4-3.5-10.8-8.8h-5.9c.5 8.6 7.4 13.9 16.7 13.9 8.8 0 14.8-4.7 14.8-12.6 0-8.8-14.7-6.2-14.7-14.2 0-3.8 3.3-5.9 7.7-5.9 5.3 0 8.7 2.7 9.2 7.1h5.8c-.6-7.5-6.5-12.7-14.4-12.7z"
+      />
+    </svg>
+  );
+}
+
 export default function ShopifyNotification() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Exact screen width listener for 100% strict mobile/desktop separation
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Trigger popup mechanism on scroll
   useEffect(() => {
@@ -136,7 +162,7 @@ export default function ShopifyNotification() {
     }
   };
 
-  // Auto-hide popup after 5 seconds
+  // Auto-hide popup after 5.5 seconds
   useEffect(() => {
     if (!isVisible) return;
     const hideTimer = setTimeout(() => {
@@ -150,55 +176,94 @@ export default function ShopifyNotification() {
   const current = orders[currentIndex];
 
   return (
-    <div
-      className={`fixed bottom-4 left-4 z-50 max-w-[340px] sm:max-w-[390px] transition-all duration-500 ease-out transform ${
-        isVisible && hasScrolled
-          ? "translate-y-0 opacity-100 pointer-events-auto scale-100"
-          : "translate-y-10 opacity-0 pointer-events-none scale-95"
-      }`}
-    >
-      {/* iOS Lockscreen Push Notification Styling (matching Shopify iOS popup screenshot exactly) */}
-      <div className="relative bg-[#2e2d2b]/85 backdrop-blur-2xl border border-white/10 rounded-[22px] p-3.5 shadow-2xl text-white font-[-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,sans-serif] flex items-start gap-3 sm:gap-3.5">
-        {/* Shopify Official App Icon Squircle */}
-        <div className="w-11 h-11 rounded-[12px] bg-white flex items-center justify-center shrink-0 shadow-md p-1.5 overflow-hidden">
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <path
-              fill="#95bf47"
-              d="M84.5 24.8c-.1-.7-.7-1.2-1.4-1.2h-11.8v-3.7C71.3 8.9 62.4 0 51.4 0S31.5 8.9 31.5 19.9v3.7H19.7c-.7 0-1.3.5-1.4 1.2L11 88.2c-.1.7.3 1.4.9 1.7.3.1.6.2.9.2h76.8c.3 0 .6-.1.9-.2.6-.3 1-.1.9-1.7L84.5 24.8zM41.5 19.9c0-5.5 4.4-9.9 9.9-9.9s9.9 4.4 9.9 9.9v3.7H41.5v-3.7z"
-            />
-            <path
-              fill="#ffffff"
-              d="M51.8 45.2c-5.4 0-8.2 2.7-8.2 6.5 0 8.1 14.8 5.7 14.8 14.4 0 4.5-3.8 7.3-9 7.3-6.2 0-10.4-3.5-10.8-8.8h-5.9c.5 8.6 7.4 13.9 16.7 13.9 8.8 0 14.8-4.7 14.8-12.6 0-8.8-14.7-6.2-14.7-14.2 0-3.8 3.3-5.9 7.7-5.9 5.3 0 8.7 2.7 9.2 7.1h5.8c-.6-7.5-6.5-12.7-14.4-12.7z"
-            />
-          </svg>
-        </div>
+    <>
+      {/* 📱 MOBILE VIEW: Rendered ONLY when window width < 640px */}
+      {isMobile && (
+        <div className="fixed bottom-20 left-4 z-40">
+          {isVisible && hasScrolled ? (
+            <div className="relative flex items-center gap-2.5 bg-[#2e2d2b]/95 backdrop-blur-2xl border border-white/15 rounded-full px-3.5 py-2 shadow-2xl text-white font-[-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,sans-serif] max-w-[88vw] animate-in fade-in slide-in-from-bottom-4 duration-300">
+              {/* Floating Shopify Icon */}
+              <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center shrink-0 shadow-md p-1 overflow-hidden">
+                <ShopifyLogoSVG />
+              </div>
 
-        {/* Content Body */}
-        <div className="flex-1 min-w-0 pr-3">
-          <div className="flex items-center justify-between mb-0.5">
-            <span className="font-semibold text-white text-[15px] tracking-tight">
-              Shopify
-            </span>
-            <span className="text-[12px] text-white/60 font-normal">
-              {current.time}
-            </span>
+              {/* Single line text on mobile */}
+              <div className="flex-1 min-w-0 truncate pr-1">
+                <p className="text-[12px] text-white/90 leading-tight truncate">
+                  <span className="font-bold text-white">{current.brand}</span> order for <span className="font-bold text-emerald-400">{current.amountText}</span>
+                </p>
+              </div>
+
+              {/* Close button */}
+              <button
+                type="button"
+                onClick={() => setDismissed(true)}
+                className="text-white/50 hover:text-white p-0.5 rounded-full shrink-0"
+                aria-label="Close notification"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : hasScrolled ? (
+            /* Floating Shopify Bubble on Mobile when idle */
+            <button
+              type="button"
+              onClick={() => triggerOrderPopup(currentIndex)}
+              className="relative w-11 h-11 rounded-full bg-white border border-black/10 shadow-2xl p-2 flex items-center justify-center transition-transform active:scale-95 animate-pulse"
+              aria-label="Show Shopify notification"
+            >
+              <ShopifyLogoSVG />
+              <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white" />
+            </button>
+          ) : null}
+        </div>
+      )}
+
+      {/* 🖥️ DESKTOP VIEW: Rendered ONLY when window width >= 640px */}
+      {!isMobile && (
+        <div className="fixed bottom-5 left-5 z-40">
+          <div
+            className={`max-w-[390px] transition-all duration-500 ease-out transform ${
+              isVisible && hasScrolled
+                ? "translate-y-0 opacity-100 pointer-events-auto scale-100"
+                : "translate-y-10 opacity-0 pointer-events-none scale-95"
+            }`}
+          >
+            <div className="relative bg-[#2e2d2b]/85 backdrop-blur-2xl border border-white/10 rounded-[22px] p-3.5 shadow-2xl text-white font-[-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,sans-serif] flex items-start gap-3.5">
+              {/* Shopify Official App Icon Squircle */}
+              <div className="w-11 h-11 rounded-[12px] bg-white flex items-center justify-center shrink-0 shadow-md p-1.5 overflow-hidden">
+                <ShopifyLogoSVG />
+              </div>
+
+              {/* Content Body */}
+              <div className="flex-1 min-w-0 pr-3">
+                <div className="flex items-center justify-between mb-0.5">
+                  <span className="font-semibold text-white text-[15px] tracking-tight">
+                    Shopify
+                  </span>
+                  <span className="text-[12px] text-white/60 font-normal">
+                    {current.time}
+                  </span>
+                </div>
+
+                <p className="text-[13.5px] text-white/90 leading-[1.35] font-normal tracking-tight">
+                  <span className="font-medium text-white">{current.brand}</span> has a new order for {current.itemsCount} {current.itemsCount === 1 ? "item" : "items"} totaling <span className="font-semibold text-white">{current.amountText}</span> from Online Store.
+                </p>
+              </div>
+
+              {/* Close button */}
+              <button
+                type="button"
+                onClick={() => setDismissed(true)}
+                className="text-white/40 hover:text-white p-1 rounded-full transition-colors shrink-0 -mt-1 -mr-1"
+                aria-label="Close notification"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
-
-          <p className="text-[13px] sm:text-[13.5px] text-white/90 leading-[1.35] font-normal tracking-tight">
-            <span className="font-medium text-white">{current.brand}</span> has a new order for {current.itemsCount} {current.itemsCount === 1 ? "item" : "items"} totaling <span className="font-semibold text-white">{current.amountText}</span> from Online Store.
-          </p>
         </div>
-
-        {/* Close button */}
-        <button
-          type="button"
-          onClick={() => setDismissed(true)}
-          className="text-white/40 hover:text-white p-1 rounded-full transition-colors shrink-0 -mt-1 -mr-1"
-          aria-label="Close notification"
-        >
-          <X className="w-3.5 h-3.5" />
-        </button>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
