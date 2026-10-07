@@ -30,10 +30,10 @@ const page = () => {
         <Navbar />
         <Firstsection />
         {/* <SecondSection /> */}
-         <CurvedScroll />
+         {/* <CurvedScroll /> */}
         
         {/* <Intro /> */}
-        {/* <PinSection /> */}
+        <PinSection />
       
         <ThirdSection/>
         {/* <WorkCard/> */}
