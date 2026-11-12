@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
 const services = [
   {
@@ -33,159 +33,87 @@ const services = [
 
 export default function SecondSection() {
   const [active, setActive] = useState<number | null>(null);
-  const serviceRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  // Motion values for cursor-follow image
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const smoothX = useSpring(mouseX, { stiffness: 300, damping: 30 });
-  const smoothY = useSpring(mouseY, { stiffness: 300, damping: 30 });
-
-  // Track cursor movement
-  useEffect(() => {
-    const moveImage = (e: MouseEvent) => {
-      const maxX = window.innerWidth * 0.4; // limit to left 40%
-      const clampedX = Math.min(e.clientX, maxX);
-
-      mouseX.set(clampedX);
-      mouseY.set(e.clientY);
-    };
-
-    if (active !== null) {
-      window.addEventListener("mousemove", moveImage);
-    }
-
-    return () => {
-      window.removeEventListener("mousemove", moveImage);
-    };
-  }, [active, mouseX, mouseY]);
-
-  // Intersection fade-up animation
-  useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-
-    serviceRefs.current.forEach((ref) => {
-      if (!ref) return;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("animate-fadeup");
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        {
-          threshold: 0.2,
-          rootMargin: "0px 0px -50px 0px",
-        }
-      );
-
-      observer.observe(ref);
-      observers.push(observer);
-    });
-
-    return () => observers.forEach((o) => o.disconnect());
-  }, []);
 
   return (
-    <section
-      id="second-section"
-      className="relative container w-full py-10 sm:py-[60px] lg:py-20"
-    >
-      {/* Heading */}
-      <div className="flex items-center justify-center w-full py-30 lg:mb-20">
-        <h1 className="text-center black-text" style={{ textTransform: "none" }}>
-          <span className="text-highlight">Born in Bombay,</span> crafting
-          digital experiences that connect and inspire.
-        </h1>
-      </div>
+    <section id="second-section" className="relative w-full px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-28">
+      <div className="mx-auto w-full max-w-6xl">
+        <div className="mb-12 flex justify-center sm:mb-16 lg:mb-20">
+          <h1 className="black-text max-w-4xl text-center" style={{ textTransform: "none" }}>
+            <span className="text-highlight">Born in Bombay,</span> crafting digital experiences that connect and inspire.
+          </h1>
+        </div>
 
-      {/* Services list */}
-      <div className="mx-auto flex flex-col lg:w-[70%] space-y-16">
-        {services.map((s, index) => (
-          <div
-            key={s.id}
-            ref={(el) => {
-              serviceRefs.current[index] = el;
-            }}
-            onMouseEnter={() => setActive(s.id)}
-            onMouseLeave={() => setActive(null)}
-            className="flex flex-col md:flex-row md:justify-between md:gap-12 cursor-pointer group items-start opacity-0 fade-up"
-          >
-            {/* Number */}
-            <h2 className="order-1 text-highlight numbering text-left flex items-center justify-center">
-              {s.id.toString().padStart(2, "0")}
-            </h2>
+        <div className="border-t border-black/20">
+          {services.map((service) => {
+            const isActive = active === service.id;
 
-            {/* Content */}
-            <div className="flex flex-col order-2 space-y-4 text-left max-w-120">
-              <h3 className="black-text">{s.title}</h3>
+            return (
+              <div
+                key={service.id}
+                className={`group relative border-b border-black/20 transition-colors duration-300 ${isActive ? "bg-black/[0.025]" : "bg-transparent"}`}
+                onMouseEnter={() => setActive(service.id)}
+                onMouseLeave={() => setActive(null)}
+                onFocus={() => setActive(service.id)}
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                    setActive(null);
+                  }
+                }}
+                tabIndex={0}
+                aria-label={`${service.title}: ${service.desc}`}
+              >
+                <div className="grid min-h-[170px] grid-cols-[52px_1fr] items-center gap-4 px-2 py-7 sm:min-h-[190px] sm:grid-cols-[80px_1fr] sm:gap-7 sm:px-5 lg:grid-cols-[100px_1fr_300px] lg:gap-10 lg:px-8">
+                  <span className="numbering text-highlight self-start pt-1 text-left">
+                    {service.id.toString().padStart(2, "0")}
+                  </span>
 
-              {/* Mobile image */}
-              <div className="md:hidden">
-                <img
-                  src={s.img}
-                  alt={s.title}
-                  width={600}
-                  height={400}
-                  className="rounded-[15px] shadow-lg"
-                />
+                  <div className="max-w-3xl">
+                    <h2 className="black-text mb-3 text-left transition-transform duration-300 group-hover:translate-x-1 group-focus:translate-x-1">
+                      {service.title}
+                    </h2>
+                    <p className="body2 black-text max-w-2xl text-left opacity-75">{service.desc}</p>
+                  </div>
+
+                  <div className="hidden h-[180px] overflow-hidden rounded-2xl lg:block">
+                    <AnimatePresence mode="wait">
+                      {isActive && (
+                        <motion.div
+                          key={service.id}
+                          initial={{ opacity: 0, y: 16, scale: 0.96 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -12, scale: 0.97 }}
+                          transition={{ duration: 0.24, ease: "easeOut" }}
+                          className="h-full w-full"
+                        >
+                          <Image
+                            src={service.img}
+                            alt={service.title}
+                            width={600}
+                            height={400}
+                            sizes="300px"
+                            className="h-full w-full rounded-2xl object-cover shadow-lg"
+                          />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <div className="col-start-2 mt-5 overflow-hidden rounded-xl lg:hidden">
+                    <Image
+                      src={service.img}
+                      alt={service.title}
+                      width={600}
+                      height={400}
+                      sizes="(max-width: 640px) 90vw, 60vw"
+                      className="h-auto max-h-64 w-full rounded-xl object-cover shadow-md"
+                    />
+                  </div>
+                </div>
               </div>
-
-              <p className="black-text max-w-120 body2">{s.desc}</p>
-            </div>
-          </div>
-        ))}
+            );
+          })}
+        </div>
       </div>
-
-      {/* Floating image (desktop only, follows cursor) */}
-      {active !== null && (
-        <motion.div
-          className="hidden md:block pointer-events-none z-50"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            x: smoothX,
-            y: smoothY,
-            translateX: "-50%",
-            translateY: "-50%",
-          }}
-          initial={{ scale: 0.5, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.5, opacity: 0 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-        >
-          <Image
-            src={services[active - 1].img}
-            alt={services[active - 1].title}
-            width={300}
-            height={300}
-            className="rounded-[15px] shadow-lg"
-          />
-        </motion.div>
-      )}
-
-      {/* Animations */}
-      <style jsx global>{`
-        .fade-up {
-          transform: translateY(50px);
-        }
-
-        .animate-fadeup {
-          animation: fadeUp 1s ease-out forwards;
-        }
-
-        @keyframes fadeUp {
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </section>
   );
 }
