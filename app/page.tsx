@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Firstsection from "./components/HomePage/Firstsection";
 import SecondSection from "./components/HomePage/SecondSection";
 import StudioSection from "./components/HomePage/StudioSection"
+import PaperGun from "./components/HomePage/PaperGun"
 import ThirdSection from "./components/HomePage/ThirdSection";
 import WorkCard from "./components/HomePage/WorkCard";
 import PerformanceROI from "./components/HomePage/PerformanceROI"
@@ -48,13 +49,14 @@ export default function Home() {
       <Navbar />
       <Firstsection/>
       <SecondSection/>
-      <ThirdSection/>
+      <PaperGun />
+      {/* <ThirdSection/> */}
       <WorkCard />
       <StudioSection/>
-      <PerformanceROI/>
+      {/* <PerformanceROI/> */}
       <BombAISection/>
       <RubberSection/>
-      <CardCarousel/>
+      {/* <CardCarousel/> */}
       {/* <Testimonials/> */}
       <SeventhSection/>
       <Footer />
