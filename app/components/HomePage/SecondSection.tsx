@@ -49,8 +49,21 @@ const services = [
 },
 ];
 
+
+
+
+
+
+
 export default function SecondSection() {
   const [active, setActive] = useState<number | null>(null);
+
+
+
+
+
+
+  
 
   return (
     <section id="second-section" className="relative w-full py-10 sm:py-15 lg:py-20">
