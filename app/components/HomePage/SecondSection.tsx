@@ -49,12 +49,6 @@ const services = [
 },
 ];
 
-
-
-
-
-
-
 export default function SecondSection() {
   const [active, setActive] = useState<number | null>(null);
 
