@@ -80,7 +80,7 @@ export default function SecondSection() {
                 tabIndex={0}
                 aria-label={`${service.title}: ${service.desc}`}
               >
-                <div className="grid min-h-[170px] grid-cols-[40px_1fr] items-center gap-4 px-2 py-7 sm:min-h-[190px] sm:grid-cols-[52px_1fr] sm:gap-7 sm:px-5 lg:grid-cols-[100px_1fr_300px] lg:gap-10 lg:px-8">
+                <div className="grid min-h-[170px] grid-cols-[40px_1fr] items-center gap-5 py-7 sm:min-h-[190px] sm:grid-cols-[52px_1fr] sm:gap-7   lg:grid-cols-[100px_1fr_300px] lg:gap-10  ">
                   <span className="numbering text-highlight self-start pt-1 text-left text-[24px] sm:text-[28px] lg:text-[120px]">
                     {service.id.toString().padStart(2, "0")}
                   </span>
@@ -90,7 +90,7 @@ export default function SecondSection() {
                       {service.title}
                     </h2>
 
-                     <h5 className="black-text mb-3 text-left transition-transform duration-300  ">
+                     <h5 className="black-text text-left transition-transform duration-300  ">
                       {service.subtitle}
                     </h5>
 
