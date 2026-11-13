@@ -6,6 +6,13 @@ const SeventhSection = () => {
   return (
     <section className="container py-10 sm:py-15 lg:py-20">
       <div className="bg-[#1D1D1D] rounded-[20px] relative overflow-hidden">
+        <Image
+          width={1000}
+          height={1000}
+          alt=""
+          src="/images/BB-web-chai-2.gif"
+          className="pointer-events-none absolute inset-0 z-0 h-full w-full object-contain opacity-20 sm:hidden"
+        />
         <div className="relative z-10 flex items-center justify-center py-10 sm:py-12 md:py-10">
           <div className="text-center space-y-6 sm:space-y-8">
             {/* Image */}
@@ -14,7 +21,7 @@ const SeventhSection = () => {
               height={1000}
               alt=""
               src="/images/BB-web-chai-2.gif"
-              className="w-[180px] h-auto sm:w-[240px] sm:h-[160px] md:w-[250px] md:h-auto mx-auto mb-4 sm:mb-8"
+              className="hidden w-[180px] h-auto sm:block sm:w-[240px] sm:h-[160px] md:w-[250px] md:h-auto mx-auto mb-4 sm:mb-8"
             />
 
             {/* Animated Heading */}

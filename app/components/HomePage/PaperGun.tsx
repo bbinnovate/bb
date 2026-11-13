@@ -53,11 +53,12 @@ export default function PaperGun() {
     if (!root) return;
     const $ = <T extends HTMLElement = HTMLElement>(s: string) => root.querySelector(s) as T;
     const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const MOBILE = matchMedia('(max-width: 700px)').matches;
 
     /* ---------- tunables ---------- */
     const FIRE_MS = RM ? 300 : 85;
     const GRAVITY = 0.28, DRAG = 0.975, MAXFALL = 5, FLUTTER = 1.4, FLIP = RM ? 20 : 55;
-    const FLY_MIN = RM ? 380 : 700, FLY_MAX = RM ? 520 : 1100;
+    const FLY_MIN = MOBILE ? 260 : RM ? 380 : 700, FLY_MAX = MOBILE ? 420 : RM ? 520 : 1100;
     const GLIDE_MS = RM ? 420 : 700;
     const GAP = 10, TRAY_H = 58;
 
@@ -115,7 +116,7 @@ export default function PaperGun() {
       id: a[0].toLowerCase(), w: 88, h: 64,
     }));
 
-    const PAPER = ['#ff5fa8', '#ffd23f', '#3f6bff', '#3fe0a8', '#ff8a2a', '#8b5cff', '#c8f03c', '#5cc8ff', '#1c1c22', '#ffffff'];
+    const PAPER = ['#fab31e'];
     const lum = (hex: string) => {
       const c = [1, 3, 5].map((i) => {
         const v = parseInt(hex.substr(i, 2), 16) / 255;
@@ -155,7 +156,7 @@ export default function PaperGun() {
       const el = document.createElement('div') as SlipEl;
       el.className = 'slip ' + k.type + (c.dark ? '' : ' light');
       el.style.setProperty('--bg', c.bg);
-      el.style.setProperty('--fg', c.dark ? '#fff' : '#15151a');
+      el.style.setProperty('--fg', '#000');
       const face = document.createElement('div');
       face.className = 'face';
       const w = document.createElement('b');
@@ -259,7 +260,7 @@ export default function PaperGun() {
       fit(kind, w, baseFs);
       const sr = sky.getBoundingClientRect(), r = slotEl.getBoundingClientRect();
       const a = (rnd(150, 190) * Math.PI) / 180;
-      const sp = RM ? rnd(6, 9) : rnd(9, 16);
+      const sp = MOBILE ? rnd(4, 7) : RM ? rnd(6, 9) : rnd(9, 16);
       const p: Slip = {
         el, kind, mode: 'fly',
         x: r.left + r.width / 2 - sr.left, y: r.top + r.height / 2 - sr.top,

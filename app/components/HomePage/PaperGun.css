@@ -110,7 +110,7 @@ h1 em{font:italic 400 1.1em/.9 var(--serif);letter-spacing:-.01em}
   .copy{max-width:none}
   .sub{font-size:16.5px}
   .copy{order:1}.gunwrap{order:2}.tray{order:3}
-  .gunwrap{position:relative;right:auto;top:auto;transform:none;width:min(88%,480px);margin:30px 6px 0 auto}
+  .gunwrap{position:relative;right:auto;top:auto;transform:none;width:min(78%,420px);margin:30px 6px 0 auto}
   .tray{width:100%;margin-top:36px;min-height:400px}
   .card{right:14px;bottom:14px}
   .key{height:54px;padding:0 26px 0 20px;font-size:16px}

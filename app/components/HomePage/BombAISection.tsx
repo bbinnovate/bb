@@ -12,6 +12,40 @@ const images = [
   "/images/bomai5.webp",
   "/images/bomai6.webp",
 ];
+const videos = [
+  { src: "/video/previews/preview-1.mp4", title: "Campaign Reel 01" },
+  { src: "/video/previews/preview-2.mp4", title: "Campaign Reel 02" },
+  { src: "/video/previews/preview-3.mp4", title: "Campaign Reel 03" },
+  { src: "/video/previews/preview-4.mp4", title: "Campaign Reel 04" },
+  { src: "/video/previews/preview-6.mp4", title: "Campaign Reel 05" },
+  { src: "/video/previews/preview-7.mp4", title: "Campaign Reel 06" },
+];
+const tools = [
+  {
+    id: "expenses",
+    name: "Expense Tracker",
+    image: "/images/expenses.png",
+    href: "https://expenses.bombayblokes.com/",
+  },
+  {
+    id: "product-studio",
+    name: "AI Product Studio",
+    image: "/images/product-iamge.png",
+    href: "https://productimagegeneration.vercel.app/studio",
+  },
+  {
+    id: "stacktrack",
+    name: "The Ledger",
+    image: "/images/stacktrack.png",
+    href: "https://stacktrack.bombayblokes.com/",
+  },
+  {
+    id: "scraper",
+    name: "Product Scraper",
+    image: "/images/scraper1.png",
+    href: "https://bb-scraper.vercel.app/",
+  },
+];
 gsap.registerPlugin(ScrollTrigger);
 export default function BombAISection() {
   const root = useRef<HTMLDivElement | null>(null);
@@ -21,11 +55,9 @@ export default function BombAISection() {
   const INITIAL_TEXT = "Click To Generate Your AI Images";
   const NEW_TEXT = "Generate High converting Image For Meta Ads.";
   const [labelText, setLabelText] = useState(INITIAL_TEXT);
+  const [activeTab, setActiveTab] = useState<"images" | "video" | "tools">("images");
   const [showImages, setShowImages] = useState<boolean[]>(
     new Array(images.length).fill(false)
-  );
-  const imageTimersRef = useRef<(NodeJS.Timeout | null)[]>(
-    new Array(images.length).fill(null)
   );
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -93,15 +125,44 @@ export default function BombAISection() {
     }, root);
     return () => ctx.revert();
   }, []);
-  // Cleanup timers on unmount
   useEffect(() => {
-    const timers = imageTimersRef.current;
+    if (activeTab === "images" || !cardRef.current) return;
+
+    const card = cardRef.current;
+    gsap.killTweensOf(card);
+    gsap.to(card, {
+      height: card.scrollHeight,
+      duration: 0.3,
+      ease: "power2.out",
+      onComplete: () => {
+        card.style.height = "auto";
+      },
+    });
+  }, [activeTab]);
+  useEffect(() => {
+    if (activeTab !== "video" || !gridRef.current) return;
+
+    const videoElements = Array.from(gridRef.current.querySelectorAll("video"));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) {
+            void video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { rootMargin: "100px 0px", threshold: 0.1 }
+    );
+
+    videoElements.forEach((video) => observer.observe(video));
     return () => {
-      timers.forEach((timer) => {
-        if (timer) clearTimeout(timer);
-      });
+      observer.disconnect();
+      videoElements.forEach((video) => video.pause());
     };
-  }, []);
+  }, [activeTab]);
   return (
     <section
       ref={root}
@@ -287,11 +348,29 @@ export default function BombAISection() {
                 </div>
               </div>
             </button>
+            <div className="mt-8 flex w-full max-w-4xl justify-center gap-3" role="tablist" aria-label="Bomb.AI examples">
+              {(["images", "video", "tools"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`rounded-full border px-5 py-2 text-sm font-semibold capitalize transition-colors ${
+                    activeTab === tab
+                      ? "border-[var(--color-highlight)] bg-[var(--color-highlight)] text-black"
+                      : "border-white/30 text-white hover:border-[var(--color-highlight)] hover:text-[var(--color-highlight)]"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
             <div
               ref={gridRef}
-              className="mt-16 grid gap-4 w-full max-w-4xl grid-cols-2 sm:grid-cols-3 "
+              className={`mt-6 grid w-full max-w-4xl gap-4 ${activeTab === "tools" ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-2 sm:grid-cols-3"}`}
             >
-              {images.map((src, i) => (
+              {activeTab === "images" && images.map((src, i) => (
                 <div
                   key={i}
                   className="aspect-square rounded-xl overflow-hidden flex items-center justify-center bg-gray-700/40 relative"
@@ -311,26 +390,67 @@ export default function BombAISection() {
                     alt={`AI Generated Image ${i + 1}`}
                     width={400}
                     height={400}
+                    quality={60}
                     className={`w-full h-full object-cover transition-opacity duration-500 ${
                       showImages[i] ? "opacity-100" : "opacity-0"
                     }`}
                     onLoad={() => {
-                      const baseDelay = 4200;
-                      const staggerDelay = i * 500;
-                      const minDisplayTime = baseDelay + staggerDelay;
-                      if (imageTimersRef.current[i]) {
-                        clearTimeout(imageTimersRef.current[i]!);
-                      }
-                      imageTimersRef.current[i] = setTimeout(() => {
-                        setShowImages((prev) => {
-                          const newState = [...prev];
-                          newState[i] = true;
-                          return newState;
-                        });
-                      }, minDisplayTime);
+                      setShowImages((prev) => {
+                        const newState = [...prev];
+                        newState[i] = true;
+                        return newState;
+                      });
                     }}
                   />
                 </div>
+              ))}
+              {activeTab === "video" && videos.map((video) => (
+                <div key={video.src} className="relative aspect-square overflow-hidden rounded-xl bg-black/50">
+                  <video
+                    src={video.src}
+                    aria-label={video.title}
+                    muted
+                    loop
+                    preload="none"
+                    playsInline
+                    className="h-full w-full object-cover"
+                  />
+                  {/* <span className="absolute bottom-0 left-0 right-0 bg-black/60 px-3 py-2 text-xs font-medium text-white">
+                    {video.title}
+                  </span> */}
+                </div>
+              ))}
+              {activeTab === "tools" && tools.map((tool) => (
+                <a
+                  key={tool.id}
+                  href={tool.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open ${tool.name}`}
+                  className={`group overflow-hidden rounded-2xl border p-3 text-left transition-transform hover:-translate-y-1 sm:p-4 ${
+                    tool.id === "expenses" || tool.id === "stacktrack"
+                      ? "border-white/10 bg-[#111210] text-white"
+                      : tool.id === "product-studio"
+                        ? "border-black/10 bg-[#f7f8fa] text-[#171717]"
+                        : "border-[#f1df9b] bg-gradient-to-br from-[#fffdf6] to-[#fff0b8] text-[#171717]"
+                  }`}
+                >
+                  <div className="relative mb-3 aspect-[2/1] w-full overflow-hidden rounded-xl">
+                    <Image
+                      src={tool.image}
+                      alt={`${tool.name} preview`}
+                      fill
+                      sizes="(max-width: 640px) 90vw, (max-width: 1024px) 42vw, 380px"
+                      quality={60}
+                      className="object-cover"
+                    />
+                  </div>
+
+                  <div className="mt-3 flex items-center justify-between gap-2 border-t border-current/10 pt-3">
+                    <h3 className="min-w-0 truncate text-sm font-semibold sm:text-base">{tool.name}</h3>
+                    <span className="shrink-0 text-sm font-semibold text-[#fab31e] group-hover:underline">Open ↗</span>
+                  </div>
+                </a>
               ))}
             </div>
             <div className="flex justify-center items-center py-10">

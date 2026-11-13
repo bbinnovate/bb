@@ -135,7 +135,7 @@ export default function LightCameraAction() {
               {/* Logo */}
               <div className="w-[90px] h-[90px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px] lg:w-[110px] lg:h-[110px] rounded-full overflow-hidden border border-white bg-white flex items-center justify-center mx-auto">
                 <Image
-                  src="/images/BBStudios2.png"
+                  src="/favicon.png"
                   alt="Logo"
                   width={130}
                   height={130}
@@ -186,8 +186,8 @@ export default function LightCameraAction() {
                   key={isMobile ? "mobile" : "desktop"}
                   playbackId={
                     isMobile
-                      ? "fa5n02yew4AvrKk3A02wvF22yyCWga2mNvnH26vItJvts"
-                      : "vzvQQF6ubVWKOj8iM5C27pKCSwgI7xENHqxU7IbxR00w"
+                      ? "pUVDITP3rvpG8xijjIIauh3TeT01Kqxk3ZWqaVinOugI"
+                      : "yeCTXyhZ02exbUuun802zIY9GHyyUotThjV2WuHWNWMA8"
                   }
                   metadata={{
                     video_id: "video-id-54321",
@@ -223,8 +223,8 @@ export default function LightCameraAction() {
                   }}
                 />
                 {/* yellow accent line */}
-                <div className="absolute right-0 top-0 h-full w-3 sm:w-5 md:w-5 candy-border"></div>
-                <div
+             <div className="absolute right-0 top-0 hidden h-full w-3 sm:block sm:w-5 md:w-5 candy-border"></div>
+                {/* <div
                   className="absolute bottom-10 right-20 z-50
                     sm:right-20 sm:bottom-10
                     translate-x-1/2 sm:translate-x-0 "
@@ -236,7 +236,7 @@ export default function LightCameraAction() {
                     target="_blank"
                     rel="noopener noreferrer"
                   />
-                </div>
+                </div> */}
               </motion.div>
             </div>
             {/* Frame + shutter panels */}
